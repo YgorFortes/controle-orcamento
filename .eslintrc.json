@@ -17,6 +17,7 @@
   "rules": {
     "import/extensions": "off",
     "import/no-extraneous-dependencies": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "typescript-eslint/return-await": "off"
   }
 }
