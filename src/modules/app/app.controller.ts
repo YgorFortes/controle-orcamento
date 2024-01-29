@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AppService } from './services/app.service';
-import { AbstractRouterController } from '../../utils/abstract-class/controller/abstract-router-controller.ts';
+import { AbstractRouterController } from '../../utils/abstract-class/controller/abstract.router.controller';
 export class AppController extends AbstractRouterController {
 
   private appService : AppService;
@@ -20,7 +20,7 @@ export class AppController extends AbstractRouterController {
     this.appInformation();
   }
 
-  appInformation() {
+  appInformation() :void {
     this.router.get('/', (req: Request, res: Response)=>{
       res.send(this.appService.responseMainRouter());
     });
