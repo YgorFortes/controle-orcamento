@@ -1,9 +1,10 @@
-import { Router, Application } from 'express';
-import bodyParser from 'body-parser';
+import express, { Application, Router, json } from 'express';
 import { AppController } from './modules/app/app.controller';
+import { RevenueController } from './modules/receitas/revenue.controller';
+import { ErrorMiddleware } from './middlewares/error.middewares';
 
 export class DynamicRoutes {
-  protected router: Router;
+  protected router: express.Router;
 
   constructor() {
     this.router = Router();
@@ -11,13 +12,17 @@ export class DynamicRoutes {
   }
 
   public setupRoutes(): void {
-    this.router.use(bodyParser.json());
+    this.router.use(json());
 
     // Instanciar controladores e definir rotas
     const appController = new AppController();
+    const revenueController = new RevenueController();
+    const errorMiddleware = new ErrorMiddleware();
 
     this.router.use('/', appController.routes());
-  
+    this.router.use('/receitas', revenueController.routes());
+
+    this.router.use(errorMiddleware.handleRequestErros());
   }
 
   public attachToApp(app: Application): void {

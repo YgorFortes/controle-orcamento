@@ -11,7 +11,7 @@ export abstract class CrudRepository<T> {
 
   abstract findOne(elementId: number): T | null;
 
-  abstract create(element: object): T;
+  abstract create(element: T): Promise<T>;
 
   abstract update(elementId: number, element: object): T; 
 
