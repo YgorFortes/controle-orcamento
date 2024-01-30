@@ -1,6 +1,6 @@
 export interface InterfaceCrudService<T> {
 
-  findAll(filter: T): Promise<T[]>;
+  findAll(filter: object): Promise<T[] | undefined>;
 
   findOne(elementId: number) : Promise<T>;
 
