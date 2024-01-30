@@ -7,7 +7,7 @@ export abstract class CrudRepository<T> {
     this.primaClient = new PrismaClient();
   }
 
-  abstract findAll(filter: object):  Array<T> | Array<null>;
+  abstract findAll(filter: object): Promise<Array<T>> | Array<null>;
 
   abstract findOne(elementId: number): T | null;
 
