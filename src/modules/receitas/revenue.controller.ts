@@ -17,7 +17,21 @@ export class RevenueController extends AbstractRouterController implements Inter
   }
 
   setupRouter(): void {
+    this.findAll();
     this.create();
+  }
+
+  findAll(): void {
+    this.router.get('/', async (req: Request, res: Response, next: NextFunction)=>{
+      try {
+        const revenueQueryValidated = await this.validatorSchemaRevenue.findAll(req.query);
+
+        const listRevenue = await this.revenueService.findAll({ ...revenueQueryValidated });
+        return res.status(200).send(listRevenue);
+      } catch (error) {
+        next(error);
+      }
+    });
   }
 
   create(): void {
@@ -34,9 +48,7 @@ export class RevenueController extends AbstractRouterController implements Inter
     });
   }
 
-  findAll(): void {
-    
-  }
+ 
 
   findOne(): void {
     

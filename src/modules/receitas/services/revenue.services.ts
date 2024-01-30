@@ -16,8 +16,20 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
     this.revenueRepository = new RevenueRepository();
   }
 
-  public findAll(_filter: object): Promise<Receitas[]> {
-    throw new Error('Method not implemented.');
+  public  async findAll(filter?:  { page?: number, limit?: number }): Promise<Array<Receitas> | undefined> {
+    try {
+      const { page, limit } = filter ?? {};
+
+      if (page && limit ) {
+        return await this.pagination(page, limit);
+      }
+
+      const listRevenue = await this.revenueRepository.findAll();
+      return listRevenue;
+      
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
   }
 
   public findOne(elementId: number): Promise<Receitas> {
@@ -54,6 +66,15 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
 
   private getMonthName(date: Date): string {
     return Moth[date.getMonth() + 1]; 
+  }
+
+  private async pagination(page: number, limit: number ) : Promise<Array<Receitas> | undefined> {
+    try {
+      const listRevenuePagination =  await this.revenueRepository.pagination(page, limit);
+      return listRevenuePagination;
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
   }
 
  
