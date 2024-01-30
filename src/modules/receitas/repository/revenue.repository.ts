@@ -2,9 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CrudRepository } from '../../../utils/abstract-class/repository/abstract.crud.repository';
 import { Receitas } from '@prisma/client';
-import { CustomHttpError } from '../../../erros/custom.http.error';
+
 
 export class RevenueRepository extends CrudRepository<Receitas> {
+
 
   async create(dataRevenue: Receitas): Promise<{ id: number; descricao: string; valor: number; data: Date; }> {
     const newRevenue = await this.primaClient.receitas.create({ data: dataRevenue });
@@ -12,9 +13,22 @@ export class RevenueRepository extends CrudRepository<Receitas> {
     return newRevenue ;
   }
 
-  findAll(filter: object): null[] | { id: number; descricao: string; valor: number; data: Date; }[] {
-    throw new Error('Method not implemented.');
+  async findAll(): Promise<Array<Receitas>> {
+    const listRevenue = await this.primaClient.receitas.findMany();
+    return listRevenue;
   }
+
+  async pagination(page: number, limit: number): Promise<Array<Receitas>> {
+    const listRevenue = await this.primaClient.receitas.findMany({
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+    
+    return listRevenue;
+  }
+  
+  
+
 
   findOne(elementId: number): { id: number; descricao: string; valor: number; data: Date; } | null {
     throw new Error('Method not implemented.');
