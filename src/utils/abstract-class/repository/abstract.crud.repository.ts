@@ -9,11 +9,11 @@ export abstract class CrudRepository<T> {
 
   abstract findAll(filter: object): Promise<Array<T>> | Array<null>;
 
-  abstract findOne(elementId: number): T | null;
+  abstract findOne(elementId: number): Promise<T | null>;
 
   abstract create(element: T): Promise<T>;
 
-  abstract update(elementId: number, element: object): T; 
+  abstract update(elementId: number, element: T): Promise<T>; 
 
   abstract delete(elementId: number): number;
 
