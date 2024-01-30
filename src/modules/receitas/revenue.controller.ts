@@ -4,6 +4,7 @@ import { InterfaceCrudController } from '../../utils/interfaces/controller/inter
 import { RevenueService } from './services/revenue.services';
 import { ValidatorSchemaRevenue } from './validatorSchema/ValidatorSchemaReceita';
 import  {  NextFunction, Request, Response } from 'express';
+import { RevenueUpdateValidation } from '../../utils/interfaces/validators/interface.revenue.schema';
 
 export class RevenueController extends AbstractRouterController implements InterfaceCrudController  {
   private validatorSchemaRevenue: ValidatorSchemaRevenue;
@@ -18,7 +19,9 @@ export class RevenueController extends AbstractRouterController implements Inter
 
   setupRouter(): void {
     this.findAll();
+    this.findOne();
     this.create();
+    this.update();
   }
 
   findAll(): void {
@@ -34,6 +37,21 @@ export class RevenueController extends AbstractRouterController implements Inter
     });
   }
 
+  
+  findOne(): void {
+    this.router.get('/:id', async (req: Request, res: Response, next: NextFunction)=>{
+      try {
+        const idParamsRevenueValidated = await this.validatorSchemaRevenue.findOne(req.params);
+
+        const revenueDetails = await this.revenueService.findOne(idParamsRevenueValidated);
+
+        return res.status(200).send(revenueDetails);
+      } catch (error) {
+        next(error);
+      }
+    });
+  }
+
   create(): void {
     this.router.post('/', async (req: Request, res: Response, next: NextFunction)=>{
       try {
@@ -41,23 +59,26 @@ export class RevenueController extends AbstractRouterController implements Inter
 
         const newRevenue = await this.revenueService.create({ ...revenueBodyValidated } as Receitas);
         
-        return res.status(200).send(newRevenue);
+        return res.status(201).send(newRevenue);
       } catch (error) {
         next(error);
       }
     });
   }
 
- 
-
-  findOne(): void {
-    
-  }
-
-  
 
   update(): void {
-    
+    this.router.put('/:id', async (req: Request, res: Response, next: NextFunction)=>{
+      try {
+        const revenuePutValidated = await this.validatorSchemaRevenue.update(req.params, req.body) as RevenueUpdateValidation ;
+        
+        const newInfoRevenue = await this.revenueService.update(revenuePutValidated.params, revenuePutValidated.body);
+        
+        return res.status(201).send(newInfoRevenue);
+      } catch (error) {
+        next(error);
+      }
+    });
   }
 
 
