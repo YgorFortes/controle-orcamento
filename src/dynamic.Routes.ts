@@ -23,6 +23,7 @@ export class DynamicRoutes {
     this.router.use('/receitas', revenueController.routes());
 
     this.router.use(errorMiddleware.handleRequestErros());
+    this.router.use(errorMiddleware.handleErro404());
   }
 
   public attachToApp(app: Application): void {
