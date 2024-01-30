@@ -18,6 +18,8 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
 
   public  async findAll(filter?:  { page?: number, limit?: number }): Promise<Array<Receitas> | undefined> {
     try {
+      await this.validatorSchemaRevenue.findAll({ filter });
+
       const { page, limit } = filter ?? {};
 
       if (page && limit ) {
@@ -32,20 +34,26 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
     }
   }
 
-  public findOne(elementId: number): Promise<Receitas> {
-    throw new Error('Method not implemented.');
+  public async findOne(elementId: number): Promise<Receitas | undefined > {
+    try {
+      await this.validatorSchemaRevenue.findOne({ id: elementId });
+
+      const revenueDetails = await this.revenueRepository.findOne(elementId);
+
+      if (!revenueDetails) {
+        throw new CustomHttpError('Receita não encontrada.', 200);
+      }
+      return revenueDetails;
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
   }
 
   public async create(dataRevenue: Receitas): Promise<Receitas | undefined> {
     try {
       await this.validatorSchemaRevenue.create(dataRevenue);
       
-      const checkDuplicateRevenue = await this.revenueRepository.checkDuplicateDescriptionInSameMonth(dataRevenue.descricao, dataRevenue.data);
- 
-      if (checkDuplicateRevenue > 0) {
-        const mothName = this.getMonthName(dataRevenue.data);
-        throw new CustomHttpError(`Receita ${dataRevenue.descricao} do mês ${mothName} já cadastrada`, 400);
-      }
+      await this.verifyUniqueMonthlyDescription(dataRevenue.descricao, dataRevenue.data);
      
       const newRevenue = await this.revenueRepository.create({ ...dataRevenue });
       return newRevenue;
@@ -56,8 +64,22 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
 
 
 
-  public update(elementId: number, element: object): Promise<Receitas> {
-    throw new Error('Method not implemented.');
+  public async update(elementId: number, dataRevenue: Receitas): Promise<Receitas | undefined> {
+    try {
+      
+      await this.validatorSchemaRevenue.update({ id: elementId }, { ...dataRevenue });
+
+      await this.findOne(elementId);
+
+      await this.verifyUniqueMonthlyDescription(dataRevenue.descricao, dataRevenue.data);
+
+      const newInfoRevenue = await this.revenueRepository.update(elementId, dataRevenue);
+
+      return newInfoRevenue;
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }  
+  
   }
 
   public delete(elementId: number): Promise<Receitas> {
@@ -72,6 +94,19 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
     try {
       const listRevenuePagination =  await this.revenueRepository.pagination(page, limit);
       return listRevenuePagination;
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
+  }
+
+  private async verifyUniqueMonthlyDescription(descricao: string, data: Date) {
+    try {
+      const checkDuplicateRevenue = await this.revenueRepository.checkDuplicateDescriptionInSameMonth(descricao, data);
+ 
+      if (checkDuplicateRevenue > 0) {
+        const mothName = this.getMonthName(data);
+        throw new CustomHttpError(`Receita ${descricao} do mês ${mothName} já cadastrada.`, 400);
+      }
     } catch (error) {
       CustomHttpError.checkAndThrowError(error);
     }

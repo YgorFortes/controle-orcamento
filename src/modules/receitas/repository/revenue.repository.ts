@@ -6,19 +6,12 @@ import { Receitas } from '@prisma/client';
 
 export class RevenueRepository extends CrudRepository<Receitas> {
 
-
-  async create(dataRevenue: Receitas): Promise<{ id: number; descricao: string; valor: number; data: Date; }> {
-    const newRevenue = await this.primaClient.receitas.create({ data: dataRevenue });
-
-    return newRevenue ;
-  }
-
-  async findAll(): Promise<Array<Receitas>> {
+  public async findAll(): Promise<Array<Receitas>> {
     const listRevenue = await this.primaClient.receitas.findMany();
     return listRevenue;
   }
 
-  async pagination(page: number, limit: number): Promise<Array<Receitas>> {
+  public async pagination(page: number, limit: number): Promise<Array<Receitas>> {
     const listRevenue = await this.primaClient.receitas.findMany({
       take: limit,
       skip: (page - 1) * limit,
@@ -28,17 +21,33 @@ export class RevenueRepository extends CrudRepository<Receitas> {
   }
   
   
+  public async findOne(elementId: number): Promise<Receitas | null> {
+    const revenueDetails = await this.primaClient.receitas.findUnique({
+      where: { id: elementId },
+    });
 
-
-  findOne(elementId: number): { id: number; descricao: string; valor: number; data: Date; } | null {
-    throw new Error('Method not implemented.');
+    return revenueDetails;
   }
 
-  update(elementId: number, element: object): { id: number; descricao: string; valor: number; data: Date; } {
-    throw new Error('Method not implemented.');
+  public async create(dataRevenue: Receitas): Promise<Receitas>  {
+    const newRevenue = await this.primaClient.receitas.create({ data: dataRevenue });
+
+    return newRevenue ;
+  }
+ 
+
+  public async update(elementId: number, dataRevenue: Receitas): Promise<Receitas> {
+    const newInfoRevenue = await this.primaClient.receitas.update({
+      where: { id: elementId },
+      data: {
+        ...dataRevenue,
+      },
+    });
+
+    return newInfoRevenue;
   }
 
-  delete(elementId: number): number {
+  public delete(elementId: number): number {
     throw new Error('Method not implemented.');
   }
   
