@@ -8,6 +8,6 @@ export interface InterfaceCrudService<T> {
 
   update(elementId: number, element: T): Promise<T | undefined>;
 
-  delete(elementId: number) : Promise<T>;
+  delete(elementId: number) : Promise<object | undefined>;
 
 }

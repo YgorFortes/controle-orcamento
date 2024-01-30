@@ -15,6 +15,6 @@ export abstract class CrudRepository<T> {
 
   abstract update(elementId: number, element: T): Promise<T>; 
 
-  abstract delete(elementId: number): number;
+  abstract delete(elementId: number): Promise<T>;
 
 }

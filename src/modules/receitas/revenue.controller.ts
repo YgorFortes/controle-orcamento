@@ -22,6 +22,7 @@ export class RevenueController extends AbstractRouterController implements Inter
     this.findOne();
     this.create();
     this.update();
+    this.delete();
   }
 
   findAll(): void {
@@ -74,7 +75,7 @@ export class RevenueController extends AbstractRouterController implements Inter
         
         const newInfoRevenue = await this.revenueService.update(revenuePutValidated.params, revenuePutValidated.body);
         
-        return res.status(201).send(newInfoRevenue);
+        return res.status(200).send(newInfoRevenue);
       } catch (error) {
         next(error);
       }
@@ -84,7 +85,17 @@ export class RevenueController extends AbstractRouterController implements Inter
 
   
   delete(): void {
-    
+    this.router.delete('/:id', async (req: Request, res: Response, next: NextFunction)=>{
+      try {
+        const idParamsRevenueValidated = await this.validatorSchemaRevenue.delete(req.params);
+
+        const result = await this.revenueService.delete(idParamsRevenueValidated);
+
+        return res.status(200).send(result);
+      } catch (error) {
+        next(error);
+      }
+    });
   }
 
 

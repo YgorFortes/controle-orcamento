@@ -47,8 +47,12 @@ export class RevenueRepository extends CrudRepository<Receitas> {
     return newInfoRevenue;
   }
 
-  public delete(elementId: number): number {
-    throw new Error('Method not implemented.');
+  public async delete(elementId: number): Promise<Receitas> {
+    const result = await this.primaClient.receitas.delete({
+      where: { id: elementId },
+    });
+
+    return result;
   }
   
   async checkDuplicateDescriptionInSameMonth(descrition: string, date: Date): Promise<number> {
