@@ -1,4 +1,4 @@
-import { PrismaClient, Receitas } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 export abstract class CrudRepository<T> {
   protected primaClient : PrismaClient;
@@ -15,6 +15,6 @@ export abstract class CrudRepository<T> {
 
   abstract update(elementId: number, element: T): Promise<T>; 
 
-  abstract delete(elementId: number): Promise<Receitas>;
+  abstract delete(elementId: number): Promise<T>;
 
 }
