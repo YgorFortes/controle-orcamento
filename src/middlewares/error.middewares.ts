@@ -15,11 +15,19 @@ export class ErrorMiddleware {
       }
 
       if (error instanceof Error) {
+        console.log(error);
         return res.status(500).send({ mensagem: 'Servidor com problemas! Volte mais tarde.'  });
       }
 
       next();
     };
+  }
+
+  handleError404() {
+    return (__: Request, res: Response)=>{
+      return res.status(404).send({ mensagem: 'Desculpe, a página que você está procurando não foi encontrada.' });
+    };
+    
   }
 
 
