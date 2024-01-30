@@ -82,8 +82,22 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
   
   }
 
-  public delete(elementId: number): Promise<Receitas> {
-    throw new Error('Method not implemented.');
+  public async delete(elementId: number): Promise<object | undefined> {
+    try {
+      await this.validatorSchemaRevenue.delete({ id: elementId });
+
+      await this.findOne(elementId);
+
+      const result = await this.revenueRepository.delete(elementId);
+
+      if (!result) {
+        throw new CustomHttpError('Erro ao tentar deletar receita.');
+      }
+
+      return { mensagem: 'Receita excluida com sucesso.' };
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
   }
 
   private getMonthName(date: Date): string {
@@ -99,7 +113,7 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
     }
   }
 
-  private async verifyUniqueMonthlyDescription(descricao: string, data: Date) {
+  private async verifyUniqueMonthlyDescription(descricao: string, data: Date) : Promise<void> {
     try {
       const checkDuplicateRevenue = await this.revenueRepository.checkDuplicateDescriptionInSameMonth(descricao, data);
  
