@@ -9,7 +9,7 @@ export class RevenueRepository extends CrudRepository<Receitas> {
     return listRevenue;
   }
 
-  public async pagination(page: number, limit: number): Promise<Array<Receitas>> {
+  public async pagination(page: number = 1, limit: number = 10): Promise<Array<Receitas>> {
     const listRevenue = await this.primaClient.receitas.findMany({
       take: limit,
       skip: (page - 1) * limit,
