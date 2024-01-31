@@ -1,5 +1,3 @@
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CrudRepository } from '../../../utils/abstract-class/repository/abstract.crud.repository';
 import { Receitas } from '@prisma/client';
 
