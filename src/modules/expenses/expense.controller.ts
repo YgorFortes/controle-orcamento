@@ -18,11 +18,22 @@ export class ExpenseController extends AbstractRouterController implements Inter
   }
 
   setupRouter(): void {
+    this.findAll();
     this.create();
   }
 
   findAll(): void {
-    throw new Error('Method not implemented.');
+    this.router.get('/', async (req: Request, res: Response, next: NextFunction)=>{
+      try {
+        const revenueQueryValidated = await this.expensesValidatorSchema.findAll(req.query);
+
+        const expenses = await this.expenseService.findAll(revenueQueryValidated);
+
+        return res.status(200).send(expenses);
+      } catch (error) {
+        next(error);
+      }
+    });
   }
 
   findOne(): void {
