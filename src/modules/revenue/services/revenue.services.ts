@@ -20,8 +20,8 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
       await this.validatorSchemaRevenue.findAll({ filter });
 
       const { page, limit } = filter ?? {};
-
-      if (page && limit ) {
+      
+      if (page || limit ) {
         return await this.pagination(page, limit);
       }
 
@@ -103,7 +103,7 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
     return Moth[date.getMonth() + 1]; 
   }
 
-  private async pagination(page: number, limit: number ) : Promise<Array<Receitas> | undefined> {
+  private async pagination(page: number | undefined, limit: number | undefined ) : Promise<Array<Receitas> | undefined> {
     try {
       const listRevenuePagination =  await this.revenueRepository.pagination(page, limit);
       return listRevenuePagination;

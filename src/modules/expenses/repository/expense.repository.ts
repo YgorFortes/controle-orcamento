@@ -3,9 +3,20 @@ import { CrudRepository } from '../../../utils/abstract-class/repository/abstrac
 import { Despesas } from '@prisma/client';
 
 export class ExpenseRepository  extends CrudRepository<Despesas> {
-  findAll(filter: object): null[] | Promise<Despesas[]> {
-    throw new Error('Method not implemented.');
+
+  public async findAll(): Promise<Array<Despesas>> {
+    const expenses = await this.primaClient.despesas.findMany();
+    return expenses;
   }
+
+  public async pagination(page: number = 1, limit: number = 10) :Promise<Array<Despesas>> {
+    const expensesPaginated = await this.primaClient.despesas.findMany({
+      take: limit,
+      skip: ( page -  1) * limit,
+    });
+    return expensesPaginated;
+  }
+ 
 
   findOne(elementId: number): Promise<Despesas | null> {
     throw new Error('Method not implemented.');
@@ -40,6 +51,8 @@ export class ExpenseRepository  extends CrudRepository<Despesas> {
 
     return duplicateDescrition;
   }
+
+
   
 
 }
