@@ -24,4 +24,15 @@ export class ExpenseValidatorSchema {
     const resultRevenueSchemaFindAll = await revenueSchemaFindAll.validate(query);
     return resultRevenueSchemaFindAll;
   }
+
+  public async findOne(params: object): Promise<number> {
+    const revenueSchemaFindOne = object({
+      id: number().typeError('O campo id só recebe números.').
+        integer('O campo id só recebe números inteiros.').positive('O campo id só recebe números positivos')
+        .required('O campo id no params é obrigátorio'),
+    }).noUnknown();
+
+    const resultRevenueSchemaFindOne = await revenueSchemaFindOne.validate(params);
+    return resultRevenueSchemaFindOne.id;
+  }
 }
