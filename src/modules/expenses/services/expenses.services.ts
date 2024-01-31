@@ -17,8 +17,22 @@ export class ExpenseService implements InterfaceCrudService<Despesas> {
     this.expenseRepository = new ExpenseRepository();
   }
 
-  findAll(filter: object): Promise<Despesas[] | undefined> {
-    throw new Error('Method not implemented.');
+  public  async findAll(filter? : { page?: number, limit?: number }): Promise<Array<Despesas> | undefined> {
+    try {
+      
+      const { page, limit } = filter ?? {};
+
+      if (page || limit) {
+        return await this.pagination(page, limit);
+      }
+
+      const listRevenue = await this.expenseRepository.findAll();
+
+      return listRevenue;
+      
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
   }
 
   findOne(elementId: number): Promise<Despesas | undefined> {
@@ -59,6 +73,16 @@ export class ExpenseService implements InterfaceCrudService<Despesas> {
         const mothName = this.getMonthName(date);
         throw new CustomHttpError(`Despesa ${descrition} do mês ${mothName} já cadastrada.`, 400);
       }
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
+  }
+
+  private async pagination(page: number | undefined, limit: number | undefined) : Promise<Array<Despesas> | undefined> {
+    try {
+      const expensePaginated =  await this.expenseRepository.pagination(page, limit);
+
+      return expensePaginated;
     } catch (error) {
       CustomHttpError.checkAndThrowError(error);
     }
