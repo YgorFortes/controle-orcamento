@@ -1,7 +1,7 @@
 import { Receitas } from '@prisma/client';
 import { date, number, string, object } from 'yup';
 
-export class ValidatorSchemaRevenue {
+export class RevenueValidatorSchema {
 
   public async create(body: object) : Promise<Partial<Receitas>> {
     const revenueSchemaCreate = object({

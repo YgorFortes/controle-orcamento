@@ -2,18 +2,18 @@ import { Receitas } from '@prisma/client';
 import { AbstractRouterController } from '../../utils/abstract-class/controller/abstract.router.controller';
 import { InterfaceCrudController } from '../../utils/interfaces/controller/interface.crud.controller';
 import { RevenueService } from './services/revenue.services';
-import { ValidatorSchemaRevenue } from './validatorSchema/ValidatorSchemaReceita';
+import { RevenueValidatorSchema } from './validatorSchema/revenue.validator.schema';
 import  {  NextFunction, Request, Response } from 'express';
 import { RevenueUpdateValidation } from '../../utils/interfaces/validators/interface.revenue.schema';
 
 export class RevenueController extends AbstractRouterController implements InterfaceCrudController  {
-  private validatorSchemaRevenue: ValidatorSchemaRevenue;
+  private validatorSchemaRevenue: RevenueValidatorSchema;
 
   private revenueService: RevenueService;
 
   constructor() {
     super();
-    this.validatorSchemaRevenue = new ValidatorSchemaRevenue();
+    this.validatorSchemaRevenue = new RevenueValidatorSchema();
     this.revenueService = new  RevenueService();
   }
 
