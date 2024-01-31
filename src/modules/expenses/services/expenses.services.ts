@@ -35,8 +35,20 @@ export class ExpenseService implements InterfaceCrudService<Despesas> {
     }
   }
 
-  findOne(elementId: number): Promise<Despesas | undefined> {
-    throw new Error('Method not implemented.');
+  public async findOne(elementId: number): Promise<Despesas | undefined> {
+    try {
+      await this.expensesValidatorSchema.findOne({ id: elementId });
+
+      const expenseDetails = await this.expenseRepository.findOne(elementId);
+
+      if (!expenseDetails) {
+        throw new CustomHttpError('Despesa não encontrada.', 200);
+      }
+
+      return expenseDetails;
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
   }
 
   public async create(dataExpense: Despesas): Promise<Despesas | undefined> {

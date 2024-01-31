@@ -18,8 +18,14 @@ export class ExpenseRepository  extends CrudRepository<Despesas> {
   }
  
 
-  findOne(elementId: number): Promise<Despesas | null> {
-    throw new Error('Method not implemented.');
+  public async findOne(elementId: number): Promise<Despesas | null> {
+    const expenseDetails = await this.primaClient.despesas.findUnique({
+      where: {
+        id: elementId,
+      },
+    });
+
+    return expenseDetails;
   }
 
   public async create(dataExpense: Despesas): Promise<Despesas> {
@@ -30,11 +36,11 @@ export class ExpenseRepository  extends CrudRepository<Despesas> {
     return newExpense;
   }
 
-  update(elementId: number, element: Despesas): Promise<Despesas> {
+  public async update(elementId: number, element: Despesas): Promise<Despesas> {
     throw new Error('Method not implemented.');
   }
 
-  delete(elementId: number): Promise<Despesas> {
+  public async delete(elementId: number): Promise<Despesas> {
     throw new Error('Method not implemented.');
   }
 
