@@ -1,6 +1,6 @@
 import express, { Application, Router, json } from 'express';
 import { AppController } from './modules/app/app.controller';
-import { RevenueController } from './modules/receitas/revenue.controller';
+import { RevenueController } from './modules/revenue/revenue.controller'; 
 import { ErrorMiddleware } from './middlewares/error.middewares';
 
 export class DynamicRoutes {
