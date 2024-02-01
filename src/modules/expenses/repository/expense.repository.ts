@@ -37,7 +37,14 @@ export class ExpenseRepository  extends CrudRepository<Despesas> {
   }
 
   public async update(elementId: number, element: Despesas): Promise<Despesas> {
-    throw new Error('Method not implemented.');
+    const newIntoExpense = await this.primaClient.despesas.update({
+      where: { id: elementId },
+      data: {
+        ...element,
+      },
+    });
+
+    return newIntoExpense;
   }
 
   public async delete(elementId: number): Promise<Despesas> {
