@@ -23,6 +23,6 @@ model Despesas {
   descricao String  @db.VarChar(255)
   valor Float
   data DateTime
-  categoria String @db.VarChar(255)
+  categoria String? @db.VarChar(255)
   @@map("despesas")
 }
