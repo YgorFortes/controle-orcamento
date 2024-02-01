@@ -23,6 +23,7 @@ export class ExpenseController extends AbstractRouterController implements Inter
     this.findOne();
     this.create();
     this.update();
+    this.delete();
   }
 
   findAll(): void {
@@ -77,7 +78,7 @@ export class ExpenseController extends AbstractRouterController implements Inter
         const newInforExpese = await this.expenseService.update(expensePutValidated.params, expensePutValidated.body);
 
 
-        return res.status(201).send(newInforExpese);
+        return res.status(200).send(newInforExpese);
       } catch (error) {
         next(error);
       }
@@ -85,7 +86,17 @@ export class ExpenseController extends AbstractRouterController implements Inter
   }
 
   delete(): void {
-    throw new Error('Method not implemented.');
+    this.router.delete('/:id', async (req: Request, res: Response, next: NextFunction)=>{
+      try {
+        const expensesIdParamsValidated = await this.expensesValidatorSchema.delete(req.params);
+
+        const result = await this.expenseService.delete(expensesIdParamsValidated);
+
+        return res.status(200).send(result);
+      } catch (error) {
+        next(error);
+      }
+    });
   }
   
 }
