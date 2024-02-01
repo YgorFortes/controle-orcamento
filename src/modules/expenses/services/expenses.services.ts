@@ -5,6 +5,7 @@ import { ExpenseValidatorSchema } from '../validatorSchema/expense.validator.sch
 import { CustomHttpError } from '../../../erros/custom.http.error';
 import { ExpenseRepository } from '../repository/expense.repository';
 import { Moth } from '../../../utils/enuns/moth';
+import { Category } from '../../../utils/enuns/category';
 
 
 export class ExpenseService implements InterfaceCrudService<Despesas> {
@@ -53,11 +54,15 @@ export class ExpenseService implements InterfaceCrudService<Despesas> {
 
   public async create(dataExpense: Despesas): Promise<Despesas | undefined> {
     try {
+
       await this.expensesValidatorSchema.create(dataExpense);
+
+      const expenseData = Object.assign({}, dataExpense, { categoria: dataExpense.categoria || Category.OUTRAS } );
+
 
       await this.verifyUniqueMonthlyDescription(dataExpense.descricao, dataExpense.data);
 
-      const newExpense = await this.expenseRepository.create(dataExpense);
+      const newExpense = await this.expenseRepository.create(expenseData);
 
       return newExpense;
     } catch (error) {
