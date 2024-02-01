@@ -66,8 +66,20 @@ export class ExpenseService implements InterfaceCrudService<Despesas> {
  
   }
 
-  update(elementId: number, element: Despesas): Promise<Despesas | undefined> {
-    throw new Error('Method not implemented.');
+  public async update(elementId: number, dataExpense: Despesas): Promise<Despesas | undefined> {
+    try {
+      await this.expensesValidatorSchema.update({ id: elementId }, { ... dataExpense });
+
+      await this.verifyUniqueMonthlyDescription(dataExpense.descricao, dataExpense.data);
+
+      await this.findOne(elementId);
+
+      const newInforExpese = await this.expenseRepository.update(elementId, dataExpense);
+
+      return newInforExpese;
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
   }
 
   delete(elementId: number): Promise<object | undefined> {

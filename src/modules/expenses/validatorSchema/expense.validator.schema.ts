@@ -35,4 +35,11 @@ export class ExpenseValidatorSchema {
     const resultRevenueSchemaFindOne = await revenueSchemaFindOne.validate(params);
     return resultRevenueSchemaFindOne.id;
   }
+
+  public async update(params: object, body: object): Promise<object> {
+    const revenueBody = await this.create(body);
+    const revenueId = await this.findOne(params);
+
+    return { params: revenueId, body: revenueBody };
+  }
 }

@@ -4,6 +4,7 @@ import { InterfaceCrudController } from '../../utils/interfaces/controller/inter
 import { ExpenseValidatorSchema } from './validatorSchema/expense.validator.schema';
 import { ExpenseService } from './services/expenses.services';
 import { Despesas } from '@prisma/client';
+import { ExpenseUpdateValidation } from '../../utils/interfaces/validators/interfacce.revenue.schema';
 
 
 export class ExpenseController extends AbstractRouterController implements InterfaceCrudController {
@@ -21,6 +22,7 @@ export class ExpenseController extends AbstractRouterController implements Inter
     this.findAll();
     this.findOne();
     this.create();
+    this.update();
   }
 
   findAll(): void {
@@ -68,7 +70,18 @@ export class ExpenseController extends AbstractRouterController implements Inter
   }
 
   update(): void {
-    throw new Error('Method not implemented.');
+    this.router.put('/:id', async (req: Request, res: Response, next: NextFunction) =>{
+      try {
+        const expensePutValidated = await this.expensesValidatorSchema.update(req.params, req.body) as ExpenseUpdateValidation;
+
+        const newInforExpese = await this.expenseService.update(expensePutValidated.params, expensePutValidated.body);
+
+
+        return res.status(201).send(newInforExpese);
+      } catch (error) {
+        next(error);
+      }
+    });
   }
 
   delete(): void {
