@@ -48,7 +48,11 @@ export class ExpenseRepository  extends CrudRepository<Despesas> {
   }
 
   public async delete(elementId: number): Promise<Despesas> {
-    throw new Error('Method not implemented.');
+    const resultDeleteExpanse = await this.primaClient.despesas.delete({
+      where: { id: elementId },
+    });
+
+    return resultDeleteExpanse;
   }
 
   async checkDuplicateDescriptionInSameMonth(descrition: string, date: Date): Promise<number> {

@@ -82,8 +82,22 @@ export class ExpenseService implements InterfaceCrudService<Despesas> {
     }
   }
 
-  delete(elementId: number): Promise<object | undefined> {
-    throw new Error('Method not implemented.');
+  public async delete(elementId: number): Promise<object | undefined> {
+    try {
+      await this.expensesValidatorSchema.delete({ id: elementId });
+
+      await this.findOne(elementId);
+
+      const resultDelete = await this.expenseRepository.delete(elementId);
+
+      if (!resultDelete) {
+        throw new CustomHttpError('Erro ao tentar deletar despesa.');
+      }
+
+      return { mensagem: 'Despesa excluida com sucesso.' };
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
   }
 
   private getMonthName(date: Date): string {

@@ -42,4 +42,9 @@ export class ExpenseValidatorSchema {
 
     return { params: revenueId, body: revenueBody };
   }
+
+  public async delete(params: object): Promise<number> {
+    const revenueId = await this.findOne(params);
+    return revenueId;
+  }
 }
