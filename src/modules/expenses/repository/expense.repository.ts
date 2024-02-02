@@ -4,17 +4,16 @@ import { Despesas } from '@prisma/client';
 
 export class ExpenseRepository  extends CrudRepository<Despesas> {
 
-  public async findAll(): Promise<Array<Despesas>> {
-    const expenses = await this.primaClient.despesas.findMany();
-    return expenses;
-  }
+  public async findAll(filter?:  {  page?: number, limit?: number, descricao?: string }): Promise<Array<Despesas>> {
+    const { page = 1, limit = 10, descricao } = filter ?? {};
 
-  public async pagination(page: number = 1, limit: number = 10) :Promise<Array<Despesas>> {
-    const expensesPaginated = await this.primaClient.despesas.findMany({
+    const listExpenses = await this.primaClient.despesas.findMany({
       take: limit,
-      skip: ( page -  1) * limit,
+      skip: (page - 1) * limit,
+      where: descricao ? { descricao: { contains: descricao } } : undefined,
     });
-    return expensesPaginated;
+
+    return listExpenses;
   }
  
 
@@ -27,6 +26,8 @@ export class ExpenseRepository  extends CrudRepository<Despesas> {
 
     return expenseDetails;
   }
+
+  
 
   public async create(dataExpense: Despesas): Promise<Despesas> {
     const newExpense = await this.primaClient.despesas.create({
