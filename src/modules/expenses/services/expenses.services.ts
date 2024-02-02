@@ -18,16 +18,11 @@ export class ExpenseService implements InterfaceCrudService<Despesas> {
     this.expenseRepository = new ExpenseRepository();
   }
 
-  public  async findAll(filter? : { page?: number, limit?: number }): Promise<Array<Despesas> | undefined> {
+  public  async findAll(filter? :  object): Promise<Array<Despesas> | undefined> {
     try {
-      
-      const { page, limit } = filter ?? {};
+      await this.expensesValidatorSchema.findAll({ filter });
 
-      if (page || limit) {
-        return await this.pagination(page, limit);
-      }
-
-      const listRevenue = await this.expenseRepository.findAll();
+      const listRevenue = await this.expenseRepository.findAll(filter);
 
       return listRevenue;
       
@@ -116,16 +111,6 @@ export class ExpenseService implements InterfaceCrudService<Despesas> {
         const mothName = this.getMonthName(date);
         throw new CustomHttpError(`Despesa ${descrition} do mês ${mothName} já cadastrada.`, 400);
       }
-    } catch (error) {
-      CustomHttpError.checkAndThrowError(error);
-    }
-  }
-
-  private async pagination(page: number | undefined, limit: number | undefined) : Promise<Array<Despesas> | undefined> {
-    try {
-      const expensePaginated =  await this.expenseRepository.pagination(page, limit);
-
-      return expensePaginated;
     } catch (error) {
       CustomHttpError.checkAndThrowError(error);
     }
