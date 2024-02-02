@@ -18,6 +18,7 @@ export class RevenueValidatorSchema {
     const revenueSchemaFindAll = object({
       page: number().typeError('O campo page só recebe números.').integer('O campo page só recebe números inteiros.').positive('O campo page só recebe números positivos'),
       limit: number().typeError('O campo limit só recebe números.').integer('O campo limit só recebe números inteiros.').positive('O campo limit só recebe números positivos'),
+      descricao: string().trim().lowercase(),
     }).noUnknown();
 
     const resultRevenueSchemaFindAll = await revenueSchemaFindAll.validate(query);

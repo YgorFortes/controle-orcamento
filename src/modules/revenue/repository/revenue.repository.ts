@@ -4,21 +4,18 @@ import { Receitas } from '@prisma/client';
 
 export class RevenueRepository extends CrudRepository<Receitas> {
 
-  public async findAll(): Promise<Array<Receitas>> {
-    const listRevenue = await this.primaClient.receitas.findMany();
-    return listRevenue;
-  }
+  public async findAll(filter?:  {  page?: number, limit?: number, descricao?: string }): Promise<Array<Receitas>> {
+    const { page = 1, limit = 10, descricao } = filter ?? {};
+ 
 
-  public async pagination(page: number = 1, limit: number = 10): Promise<Array<Receitas>> {
     const listRevenue = await this.primaClient.receitas.findMany({
       take: limit,
       skip: (page - 1) * limit,
+      where: descricao ? { descricao: { contains: descricao } } : undefined,
     });
-    
     return listRevenue;
   }
-  
-  
+
   public async findOne(elementId: number): Promise<Receitas | null> {
     const revenueDetails = await this.primaClient.receitas.findUnique({
       where: { id: elementId },
@@ -33,7 +30,6 @@ export class RevenueRepository extends CrudRepository<Receitas> {
     return newRevenue ;
   }
  
-
   public async update(elementId: number, dataRevenue: Receitas): Promise<Receitas> {
     const newInfoRevenue = await this.primaClient.receitas.update({
       where: { id: elementId },
