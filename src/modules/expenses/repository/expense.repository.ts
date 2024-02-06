@@ -27,6 +27,26 @@ export class ExpenseRepository  extends CrudRepository<Despesas> {
     });
   }
 
+
+  public  findExpanseByMonth(filter:  { ano: number, mes: number, page?: number, limit?: number }) : Promise<Array<Despesas>> {
+    const { page = 1, limit = 10 } = filter ?? {};
+
+    if (limit > 100) {
+      throw new CustomHttpError('O limite máximo permitido para a pesquisa é de 100 registros por página.', 400);
+    }
+ 
+    return this.primaClient.despesas.findMany({
+      take: limit,
+      skip: (page - 1) * limit,
+      where: {
+        data: {
+          gte: new Date(filter.ano, filter.mes - 1, 1), 
+          lte: new Date(filter.ano, filter.mes, 0), 
+        },
+      },
+    });
+  }
+
   
   public  create(dataExpense: Despesas): Promise<Despesas> {
     return  this.primaClient.despesas.create({
