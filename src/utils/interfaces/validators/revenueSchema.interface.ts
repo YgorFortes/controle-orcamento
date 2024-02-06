@@ -1,11 +1,11 @@
 import { Receitas } from '@prisma/client';
 
-export interface RevenueUpdateValidation {
+export interface InterfaceRevenueUpdateValidation {
   params: number;
   body: Receitas;
 }
 
-export interface RevenuefindRevenueForMonth {
+export interface InterfaceRevenueSearchOptions  {
   ano: number,
   mes: number
   page?: number,

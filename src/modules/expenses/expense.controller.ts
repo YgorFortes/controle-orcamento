@@ -4,7 +4,7 @@ import { InterfaceCrudController } from '../../utils/interfaces/controller/inter
 import { ExpenseValidatorSchema } from './validatorSchema/expenseSchema.validator';
 import { ExpenseService } from './services/expenses.services';
 import { Despesas } from '@prisma/client';
-import { ExpenseUpdateValidation } from '../../utils/interfaces/validators/interfacce.revenue.schema';
+import { ExpenseUpdateValidation } from '../../utils/interfaces/validators/ExpanseSchema.interface';
 
 
 export class ExpenseController extends AbstractRouterController implements InterfaceCrudController {

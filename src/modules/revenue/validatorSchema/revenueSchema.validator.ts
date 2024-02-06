@@ -48,6 +48,12 @@ export class RevenueValidatorSchema {
     return revenueId;
   }
 
+  /**
+    Validates and merges expense filters provided in the parameters and query.
+    @param params Filter parameters provided in the parameters.
+    @param query Query filters provided in the query.
+    @returns An object that merges the validation results of the parameters and query.
+  */
   public async validateAndMergeRevenueFilters(params: object, query: object):  Promise<object> {
     const revenueParamsSchema  = object({
       ano: number().typeError('O campo ano só recebe números.').integer('O campo ano só recebe números inteiros.')
