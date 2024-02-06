@@ -26,7 +26,7 @@ export class ExpenseController extends AbstractRouterController implements Inter
     this.delete();
   }
 
-  findAll(): void {
+  public findAll(): void {
     this.router.get('/', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const expensesQueryValidated = await this.expensesValidatorSchema.findAll(req.query);
@@ -40,7 +40,7 @@ export class ExpenseController extends AbstractRouterController implements Inter
     });
   }
 
-  findOne(): void {
+  public findOne(): void {
     this.router.get('/:id', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const expensesIdParamsValidated = await this.expensesValidatorSchema.findOne(req.params);
@@ -54,7 +54,9 @@ export class ExpenseController extends AbstractRouterController implements Inter
     });
   }
 
-  create(): void {
+
+
+  public create(): void {
     this.router.post('/', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const expensesBodyValidated =  await this.expensesValidatorSchema.create(req.body) as Despesas;
@@ -66,17 +68,14 @@ export class ExpenseController extends AbstractRouterController implements Inter
         next(error);
       }
     });
-
-   
   }
 
-  update(): void {
+  public update(): void {
     this.router.put('/:id', async (req: Request, res: Response, next: NextFunction) =>{
       try {
         const expensePutValidated = await this.expensesValidatorSchema.update(req.params, req.body) as ExpenseUpdateValidation;
 
         const newInforExpese = await this.expenseService.update(expensePutValidated.params, expensePutValidated.body);
-
 
         return res.status(200).send(newInforExpese);
       } catch (error) {
@@ -85,7 +84,8 @@ export class ExpenseController extends AbstractRouterController implements Inter
     });
   }
 
-  delete(): void {
+
+  public delete(): void {
     this.router.delete('/:id', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const expensesIdParamsValidated = await this.expensesValidatorSchema.delete(req.params);

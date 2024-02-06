@@ -26,7 +26,7 @@ export class RevenueController extends AbstractRouterController implements Inter
     this.delete();
   }
 
-  findAll(): void {
+  public findAll(): void {
     this.router.get('/', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const revenueQueryValidated = await this.validatorSchemaRevenue.findAll(req.query);
@@ -40,7 +40,7 @@ export class RevenueController extends AbstractRouterController implements Inter
   }
 
   
-  findOne(): void {
+  public findOne(): void {
     this.router.get('/:id', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const idParamsRevenueValidated = await this.validatorSchemaRevenue.findOne(req.params);
@@ -54,7 +54,7 @@ export class RevenueController extends AbstractRouterController implements Inter
     });
   }
 
-  findRevenueForMonth() {
+  public findRevenueForMonth() {
     this.router.get('/:ano/:mes', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const monthValidated = await this.validatorSchemaRevenue.validateAndMergeRevenueFilters(req.params, req.query) as RevenuefindRevenueForMonth;
@@ -66,7 +66,7 @@ export class RevenueController extends AbstractRouterController implements Inter
     });
   }
 
-  create(): void {
+  public create(): void {
     this.router.post('/', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const revenueBodyValidated = await this.validatorSchemaRevenue.create(req.body);
@@ -81,7 +81,7 @@ export class RevenueController extends AbstractRouterController implements Inter
   }
 
 
-  update(): void {
+  public update(): void {
     this.router.put('/:id', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const revenuePutValidated = await this.validatorSchemaRevenue.update(req.params, req.body) as RevenueUpdateValidation ;
@@ -95,7 +95,7 @@ export class RevenueController extends AbstractRouterController implements Inter
     });
   }
 
-  delete(): void {
+  public delete(): void {
     this.router.delete('/:id', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const idParamsRevenueValidated = await this.validatorSchemaRevenue.delete(req.params);
