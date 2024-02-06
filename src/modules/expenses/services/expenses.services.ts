@@ -47,6 +47,18 @@ export class ExpenseService implements InterfaceCrudService<Despesas> {
     }
   }
 
+
+  public async findRevenueByMonth(filterDate:  { ano: number, mes: number, page?: number, limit?: number }):  Promise<Array<Despesas> | undefined> {
+    try {
+      await this.expensesValidatorSchema.validateAndMergeExpenseFilters({ ...filterDate }, { ...filterDate });
+
+      return await this.expenseRepository.findExpanseByMonth({ ...filterDate });
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
+  }
+  
+
   public async create(dataExpense: Despesas): Promise<Despesas | undefined> {
     try {
 
