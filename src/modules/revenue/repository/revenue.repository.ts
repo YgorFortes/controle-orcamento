@@ -17,14 +17,12 @@ export class RevenueRepository extends CrudRepository<Receitas> {
       skip: (page - 1) * limit,
       where: descricao ? { descricao: { contains: descricao } } : undefined,
     });
-  
   }
 
   public  findOne(elementId: number): Promise<Receitas | null> {
     return this.primaClient.receitas.findUnique({
       where: { id: elementId },
     });
-
   }
 
   public  findRevenueByMonth(filter:  { ano: number, mes: number, page?: number, limit?: number }) : Promise<Array<Receitas>> {
@@ -46,10 +44,12 @@ export class RevenueRepository extends CrudRepository<Receitas> {
     });
   }
 
+
   public  create(dataRevenue: Receitas): Promise<Receitas>  {
     return this.primaClient.receitas.create({ data: dataRevenue });
   }
  
+
   public update(elementId: number, dataRevenue: Receitas): Promise<Receitas> {
     return this.primaClient.receitas.update({
       where: { id: elementId },
@@ -59,13 +59,14 @@ export class RevenueRepository extends CrudRepository<Receitas> {
     });
   }
 
+
   public  delete(elementId: number): Promise<Receitas> {
     return this.primaClient.receitas.delete({
       where: { id: elementId },
     });
-
   }
   
+
   public checkDuplicateDescriptionInSameMonth(descrition: string, date: Date): Promise<number> {
     return  this.primaClient.receitas.count({
       where: { 
@@ -76,7 +77,6 @@ export class RevenueRepository extends CrudRepository<Receitas> {
         },
       },
     });
-    
   }
 
 }
