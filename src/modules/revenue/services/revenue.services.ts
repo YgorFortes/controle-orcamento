@@ -43,6 +43,16 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
     }
   }
 
+  public async findRevenueByMonth(filterDate:  { ano: number, mes: number, page?: number, limit?: number }):  Promise<Array<Receitas> | undefined> {
+    try {
+      await this.validatorSchemaRevenue.validateAndMergeRevenueFilters({ ...filterDate }, { ...filterDate });
+
+      return await this.revenueRepository.findRevenueByMonth({ ...filterDate });
+    } catch (error) {
+      CustomHttpError.checkAndThrowError(error);
+    }
+  }
+
   public async create(dataRevenue: Receitas): Promise<Receitas | undefined> {
     try {
       await this.validatorSchemaRevenue.create(dataRevenue);
