@@ -4,7 +4,7 @@ import { InterfaceCrudController } from '../../utils/interfaces/controller/inter
 import { ExpenseValidatorSchema } from './validatorSchema/expenseSchema.validator';
 import { ExpenseService } from './services/expenses.services';
 import { Despesas } from '@prisma/client';
-import { ExpenseUpdateValidation } from '../../utils/interfaces/validators/ExpanseSchema.interface';
+import { ExpenseUpdateValidation, InterfaceExpenseSearchOptions } from '../../utils/interfaces/validators/expanseSchema.interface';
 
 
 export class ExpenseController extends AbstractRouterController implements InterfaceCrudController {
@@ -21,6 +21,7 @@ export class ExpenseController extends AbstractRouterController implements Inter
   setupRouter(): void {
     this.findAll();
     this.findOne();
+    this.findExpenseForMonth();
     this.create();
     this.update();
     this.delete();
@@ -48,6 +49,20 @@ export class ExpenseController extends AbstractRouterController implements Inter
         const expenseDetails = await this.expenseService.findOne(expensesIdParamsValidated);
 
         return res.status(200).send(expenseDetails);
+      } catch (error) {
+        next(error);
+      }
+    });
+  }
+
+  public findExpenseForMonth(): void {
+    this.router.get('/:ano/:mes', async (req: Request, res: Response, next: NextFunction) =>{
+      try {
+        const monthValidated = await this.expensesValidatorSchema.validateAndMergeExpenseFilters(req.params, req.query) as InterfaceExpenseSearchOptions;
+
+        const ExpenseForMonth = await this.expenseService.findRevenueByMonth({ ...monthValidated }) ;
+
+        return res.status(200).send(ExpenseForMonth); 
       } catch (error) {
         next(error);
       }
