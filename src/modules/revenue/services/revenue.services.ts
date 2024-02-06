@@ -1,7 +1,7 @@
 import { Receitas } from '@prisma/client';
 import { InterfaceCrudService } from '../../../utils/interfaces/services/interface.service.crud';
 import { RevenueRepository } from '../repository/revenue.repository';
-import { RevenueValidatorSchema } from '../validatorSchema/revenue.validator.schema';
+import { RevenueValidatorSchema } from '../validatorSchema/revenueSchema.validator';
 import { CustomHttpError } from '../../../erros/custom.http.error';
 import { Moth } from '../../../utils/enuns/moth';
 

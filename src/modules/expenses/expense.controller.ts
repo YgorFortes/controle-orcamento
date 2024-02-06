@@ -1,10 +1,10 @@
 import { Request, NextFunction, Response } from 'express';
 import { AbstractRouterController } from '../../utils/abstract-class/controller/abstract.router.controller';
 import { InterfaceCrudController } from '../../utils/interfaces/controller/interface.crud.controller';
-import { ExpenseValidatorSchema } from './validatorSchema/expense.validator.schema';
+import { ExpenseValidatorSchema } from './validatorSchema/expenseSchema.validator';
 import { ExpenseService } from './services/expenses.services';
 import { Despesas } from '@prisma/client';
-import { ExpenseUpdateValidation } from '../../utils/interfaces/validators/interfacce.revenue.schema';
+import { ExpenseUpdateValidation, InterfaceExpenseSearchOptions } from '../../utils/interfaces/validators/expanseSchema.interface';
 
 
 export class ExpenseController extends AbstractRouterController implements InterfaceCrudController {
@@ -21,12 +21,13 @@ export class ExpenseController extends AbstractRouterController implements Inter
   setupRouter(): void {
     this.findAll();
     this.findOne();
+    this.findExpenseForMonth();
     this.create();
     this.update();
     this.delete();
   }
 
-  findAll(): void {
+  public findAll(): void {
     this.router.get('/', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const expensesQueryValidated = await this.expensesValidatorSchema.findAll(req.query);
@@ -40,7 +41,7 @@ export class ExpenseController extends AbstractRouterController implements Inter
     });
   }
 
-  findOne(): void {
+  public findOne(): void {
     this.router.get('/:id', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const expensesIdParamsValidated = await this.expensesValidatorSchema.findOne(req.params);
@@ -54,7 +55,23 @@ export class ExpenseController extends AbstractRouterController implements Inter
     });
   }
 
-  create(): void {
+  public findExpenseForMonth(): void {
+    this.router.get('/:ano/:mes', async (req: Request, res: Response, next: NextFunction) =>{
+      try {
+        const monthValidated = await this.expensesValidatorSchema.validateAndMergeExpenseFilters(req.params, req.query) as InterfaceExpenseSearchOptions;
+
+        const ExpenseForMonth = await this.expenseService.findRevenueByMonth({ ...monthValidated }) ;
+
+        return res.status(200).send(ExpenseForMonth); 
+      } catch (error) {
+        next(error);
+      }
+    });
+  }
+
+
+
+  public create(): void {
     this.router.post('/', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const expensesBodyValidated =  await this.expensesValidatorSchema.create(req.body) as Despesas;
@@ -66,17 +83,14 @@ export class ExpenseController extends AbstractRouterController implements Inter
         next(error);
       }
     });
-
-   
   }
 
-  update(): void {
+  public update(): void {
     this.router.put('/:id', async (req: Request, res: Response, next: NextFunction) =>{
       try {
         const expensePutValidated = await this.expensesValidatorSchema.update(req.params, req.body) as ExpenseUpdateValidation;
 
         const newInforExpese = await this.expenseService.update(expensePutValidated.params, expensePutValidated.body);
-
 
         return res.status(200).send(newInforExpese);
       } catch (error) {
@@ -85,7 +99,8 @@ export class ExpenseController extends AbstractRouterController implements Inter
     });
   }
 
-  delete(): void {
+
+  public delete(): void {
     this.router.delete('/:id', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const expensesIdParamsValidated = await this.expensesValidatorSchema.delete(req.params);

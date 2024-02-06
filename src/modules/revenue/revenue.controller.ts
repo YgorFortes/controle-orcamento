@@ -2,9 +2,9 @@ import { Receitas } from '@prisma/client';
 import { AbstractRouterController } from '../../utils/abstract-class/controller/abstract.router.controller';
 import { InterfaceCrudController } from '../../utils/interfaces/controller/interface.crud.controller';
 import { RevenueService } from './services/revenue.services';
-import { RevenueValidatorSchema } from './validatorSchema/revenue.validator.schema';
+import { RevenueValidatorSchema } from './validatorSchema/revenueSchema.validator';
 import  {  NextFunction, Request, Response } from 'express';
-import { RevenueUpdateValidation, RevenuefindRevenueForMonth } from '../../utils/interfaces/validators/interface.revenue.schema';
+import { InterfaceRevenueSearchOptions, InterfaceRevenueUpdateValidation } from '../../utils/interfaces/validators/revenueSchema.interface';
 
 export class RevenueController extends AbstractRouterController implements InterfaceCrudController  {
   private validatorSchemaRevenue: RevenueValidatorSchema;
@@ -26,7 +26,7 @@ export class RevenueController extends AbstractRouterController implements Inter
     this.delete();
   }
 
-  findAll(): void {
+  public findAll(): void {
     this.router.get('/', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const revenueQueryValidated = await this.validatorSchemaRevenue.findAll(req.query);
@@ -40,7 +40,7 @@ export class RevenueController extends AbstractRouterController implements Inter
   }
 
   
-  findOne(): void {
+  public findOne(): void {
     this.router.get('/:id', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const idParamsRevenueValidated = await this.validatorSchemaRevenue.findOne(req.params);
@@ -54,11 +54,11 @@ export class RevenueController extends AbstractRouterController implements Inter
     });
   }
 
-  findRevenueForMonth() {
+  public findRevenueForMonth() {
     this.router.get('/:ano/:mes', async (req: Request, res: Response, next: NextFunction)=>{
       try {
-        const monthValidated = await this.validatorSchemaRevenue.validateAndMergeRevenueFilters(req.params, req.query) as RevenuefindRevenueForMonth;
-        const revenueForMonth = await this.revenueService.findRevenueByMonth({ ...monthValidated }) ;
+        const monthValidated = await this.validatorSchemaRevenue.validateAndMergeRevenueFilters(req.params, req.query) as InterfaceRevenueSearchOptions ;
+        const revenueForMonth = await this.revenueService.findRevenueByMonth({ ...monthValidated });
         return res.status(200).send(revenueForMonth);
       } catch (error) {
         next(error);
@@ -66,7 +66,7 @@ export class RevenueController extends AbstractRouterController implements Inter
     });
   }
 
-  create(): void {
+  public create(): void {
     this.router.post('/', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const revenueBodyValidated = await this.validatorSchemaRevenue.create(req.body);
@@ -81,10 +81,10 @@ export class RevenueController extends AbstractRouterController implements Inter
   }
 
 
-  update(): void {
+  public update(): void {
     this.router.put('/:id', async (req: Request, res: Response, next: NextFunction)=>{
       try {
-        const revenuePutValidated = await this.validatorSchemaRevenue.update(req.params, req.body) as RevenueUpdateValidation ;
+        const revenuePutValidated = await this.validatorSchemaRevenue.update(req.params, req.body) as InterfaceRevenueUpdateValidation ;
         
         const newInfoRevenue = await this.revenueService.update(revenuePutValidated.params, revenuePutValidated.body);
         
@@ -95,7 +95,7 @@ export class RevenueController extends AbstractRouterController implements Inter
     });
   }
 
-  delete(): void {
+  public delete(): void {
     this.router.delete('/:id', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const idParamsRevenueValidated = await this.validatorSchemaRevenue.delete(req.params);
