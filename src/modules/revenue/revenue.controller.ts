@@ -4,7 +4,7 @@ import { InterfaceCrudController } from '../../utils/interfaces/controller/inter
 import { RevenueService } from './services/revenue.services';
 import { RevenueValidatorSchema } from './validatorSchema/revenueSchema.validator';
 import  {  NextFunction, Request, Response } from 'express';
-import { InterfaceRevenueSearchOptions, InterfaceRevenueUpdateValidation } from '../../utils/interfaces/validators/RevenueSchema.interface';
+import { InterfaceRevenueSearchOptions, InterfaceRevenueUpdateValidation } from '../../utils/interfaces/validators/revenueSchema.interface';
 
 export class RevenueController extends AbstractRouterController implements InterfaceCrudController  {
   private validatorSchemaRevenue: RevenueValidatorSchema;
@@ -58,7 +58,7 @@ export class RevenueController extends AbstractRouterController implements Inter
     this.router.get('/:ano/:mes', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const monthValidated = await this.validatorSchemaRevenue.validateAndMergeRevenueFilters(req.params, req.query) as InterfaceRevenueSearchOptions ;
-        const revenueForMonth = await this.revenueService.findRevenueByMonth({ ...monthValidated }) ;
+        const revenueForMonth = await this.revenueService.findRevenueByMonth({ ...monthValidated });
         return res.status(200).send(revenueForMonth);
       } catch (error) {
         next(error);
