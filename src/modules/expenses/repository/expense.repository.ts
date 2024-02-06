@@ -5,7 +5,7 @@ import { Despesas } from '@prisma/client';
 
 export class ExpenseRepository  extends CrudRepository<Despesas> {
 
-  public async findAll(filter?:  {  page?: number, limit?: number, descricao?: string }): Promise<Array<Despesas>> {
+  public  findAll(filter?:  {  page?: number, limit?: number, descricao?: string }): Promise<Array<Despesas>> {
     const { page = 1, limit = 10, descricao } = filter ?? {};
 
     if (limit > 100) {
@@ -20,7 +20,7 @@ export class ExpenseRepository  extends CrudRepository<Despesas> {
   }
  
 
-  public async findOne(elementId: number): Promise<Despesas | null> {
+  public  findOne(elementId: number): Promise<Despesas | null> {
     return this.primaClient.despesas.findUnique({
       where: {
         id: elementId,
@@ -29,14 +29,14 @@ export class ExpenseRepository  extends CrudRepository<Despesas> {
   }
 
   
-  public async create(dataExpense: Despesas): Promise<Despesas> {
+  public  create(dataExpense: Despesas): Promise<Despesas> {
     return  this.primaClient.despesas.create({
       data: dataExpense,
     });
   }
 
 
-  public async update(elementId: number, element: Despesas): Promise<Despesas> {
+  public  update(elementId: number, element: Despesas): Promise<Despesas> {
     return  this.primaClient.despesas.update({
       where: { id: elementId },
       data: {
@@ -46,14 +46,14 @@ export class ExpenseRepository  extends CrudRepository<Despesas> {
   }
 
 
-  public async delete(elementId: number): Promise<Despesas> {
+  public  delete(elementId: number): Promise<Despesas> {
     return this.primaClient.despesas.delete({
       where: { id: elementId },
     });
   }
 
 
-  async checkDuplicateDescriptionInSameMonth(descrition: string, date: Date): Promise<number> {
+  public checkDuplicateDescriptionInSameMonth(descrition: string, date: Date): Promise<number> {
     return this.primaClient.despesas.count({
       where: {
         descricao: descrition,
