@@ -1,7 +1,7 @@
 import { Request, NextFunction, Response } from 'express';
 import { AbstractRouterController } from '../../utils/abstract-class/controller/abstract.router.controller';
 import { InterfaceCrudController } from '../../utils/interfaces/controller/interface.crud.controller';
-import { ExpenseValidatorSchema } from './validatorSchema/expense.validator.schema';
+import { ExpenseValidatorSchema } from './validatorSchema/expenseSchema.validator';
 import { ExpenseService } from './services/expenses.services';
 import { Despesas } from '@prisma/client';
 import { ExpenseUpdateValidation } from '../../utils/interfaces/validators/interfacce.revenue.schema';

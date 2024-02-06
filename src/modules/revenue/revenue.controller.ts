@@ -2,7 +2,7 @@ import { Receitas } from '@prisma/client';
 import { AbstractRouterController } from '../../utils/abstract-class/controller/abstract.router.controller';
 import { InterfaceCrudController } from '../../utils/interfaces/controller/interface.crud.controller';
 import { RevenueService } from './services/revenue.services';
-import { RevenueValidatorSchema } from './validatorSchema/revenue.validator.schema';
+import { RevenueValidatorSchema } from './validatorSchema/revenueSchema.validator';
 import  {  NextFunction, Request, Response } from 'express';
 import { RevenueUpdateValidation, RevenuefindRevenueForMonth } from '../../utils/interfaces/validators/interface.revenue.schema';
 

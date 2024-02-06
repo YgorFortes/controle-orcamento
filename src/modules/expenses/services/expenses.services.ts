@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { InterfaceCrudService } from '../../../utils/interfaces/services/interface.service.crud';
 import { Despesas } from '@prisma/client';
-import { ExpenseValidatorSchema } from '../validatorSchema/expense.validator.schema';
+import { ExpenseValidatorSchema } from '../validatorSchema/expenseSchema.validator';
 import { CustomHttpError } from '../../../erros/custom.http.error';
 import { ExpenseRepository } from '../repository/expense.repository';
 import { Moth } from '../../../utils/enuns/moth';
