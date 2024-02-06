@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CustomHttpError } from '../../../erros/custom.http.error';
 import { CrudRepository } from '../../../utils/abstract-class/repository/abstract.crud.repository';
 import { Despesas } from '@prisma/client';
