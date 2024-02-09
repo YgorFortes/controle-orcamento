@@ -75,7 +75,7 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
 
       await this.findOne(elementId);
 
-      await this.verifyUniqueMonthlyDescription(dataRevenue.descricao, dataRevenue.data);
+      await this.verifyUniqueMonthlyDescription(dataRevenue.descricao, dataRevenue.data, elementId);
 
       const newInfoRevenue = await this.revenueRepository.update(elementId, dataRevenue);
 
@@ -108,9 +108,9 @@ export class RevenueService implements InterfaceCrudService<Receitas> {
     return Moth[date.getMonth() + 1]; 
   }
 
-  private async verifyUniqueMonthlyDescription(descricao: string, data: Date) : Promise<void> {
+  private async verifyUniqueMonthlyDescription(descricao: string, data: Date, idRevenue?: number ) : Promise<void> {
     try {
-      const checkDuplicateRevenue = await this.revenueRepository.checkDuplicateDescriptionInSameMonth(descricao, data);
+      const checkDuplicateRevenue = await this.revenueRepository.checkDuplicateDescriptionInSameMonth(descricao, data, idRevenue);
  
       if (checkDuplicateRevenue > 0) {
         const mothName = this.getMonthName(data);
