@@ -26,15 +26,9 @@ export class RevenueRepository extends CrudRepository<Receitas> {
   }
 
   public  findRevenueByMonth(filter:  { ano: number, mes: number, page?: number, limit?: number }) : Promise<Array<Receitas>> {
-    const { page = 1, limit = 10 } = filter ?? {};
-
-    if (limit > 100) {
-      throw new CustomHttpError('O limite máximo permitido para a pesquisa é de 100 registros por página.', 400);
-    }
+  
  
     return this.primaClient.receitas.findMany({
-      take: limit,
-      skip: (page - 1) * limit,
       where: {
         data: {
           gte: new Date(filter.ano, filter.mes - 1, 1), 
@@ -67,16 +61,26 @@ export class RevenueRepository extends CrudRepository<Receitas> {
   }
   
 
-  public checkDuplicateDescriptionInSameMonth(descrition: string, date: Date): Promise<number> {
-    return  this.primaClient.receitas.count({
-      where: { 
-        descricao: descrition, 
-        data: {
-          gte: new Date(date.getFullYear(), date.getMonth(),  1),
-          lt: new Date(date.getFullYear(), date.getMonth() + 1,  1),
-        },
+  public async  checkDuplicateDescriptionInSameMonth(descrition: string, date: Date, idRevenue?: number): Promise<number> {
+    const where = idRevenue ? {
+      descricao: descrition,
+      data: {
+        gte: new Date(date.getFullYear(), date.getMonth(), 1),
+        lt: new Date(date.getFullYear(), date.getMonth() + 1, 1),
       },
-    });
+      NOT: { id: idRevenue },
+    } : {
+      descricao: descrition,
+      data: {
+        gte: new Date(date.getFullYear(), date.getMonth(), 1),
+        lt: new Date(date.getFullYear(), date.getMonth() + 1, 1),
+      },
+    };
+
+    const resultCount = await this.primaClient.receitas.count({ where });
+
+    return resultCount;
+
   }
 
 }
