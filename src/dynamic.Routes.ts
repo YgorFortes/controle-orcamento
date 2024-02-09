@@ -3,6 +3,7 @@ import { AppController } from './modules/app/app.controller';
 import { RevenueController } from './modules/revenue/revenue.controller'; 
 import { ErrorMiddleware } from './middlewares/error.middewares';
 import { ExpenseController } from './modules/expenses/expense.controller';
+import { SummaryController } from './modules/summary/summary.controller';
 
 export class DynamicRoutes {
   protected router: express.Router;
@@ -20,10 +21,12 @@ export class DynamicRoutes {
     const appController = new AppController();
     const revenueController = new RevenueController();
     const expensesController = new ExpenseController();
+    const summaryController = new SummaryController();
 
     this.router.use('/', appController.routes());
     this.router.use('/receitas', revenueController.routes());
     this.router.use('/despesas', expensesController.routes());
+    this.router.use('/resumo', summaryController.routes());
 
     this.router.use(errorMiddleware.handleRequestErros());
     this.router.use(errorMiddleware.handleError404());
