@@ -91,6 +91,7 @@ describe('POST /receitas create revenue controller', ()=>{
     expect(reponse.status).toBe(201)
     expect(reponse.body).toHaveProperty("id");
   })
+
 });
 
 describe('GET /receitas findAll revenue controller ', ()=>{
@@ -183,7 +184,66 @@ describe('GET /receitas findAll revenue controller ', ()=>{
       )
     });
   })
+
+  it('Should be return revenue if descrition match in query params', async()=>{
+    await request(server).post("/api/v1/receitas")
+    .send({
+      descricao: "Salário Ygor",
+      valor: 1500,
+      data: new Date('2024-02-14')
+    });
+
+    await request(server).post("/api/v1/receitas")
+    .send({
+      descricao: "Salário Larissa",
+      valor: 1500,
+      data: new Date('2024-02-14')
+    });
+
+    const response = await request(server).get("/api/v1/receitas?descricao=Salário");
+    expect(response.status).toBe(200);
+    
+    response.body.forEach((revenue: { descricao: string; })=>{
+      expect(revenue.descricao).toMatch(/salário/i)
+    });
+  });
+
+  
 });
+
+describe('GET /receitas/ano/mes', ()=>{
+  it('Should be list of revenue for month', async()=>{
+    await request(server).post("/api/v1/receitas")
+    .send({
+      descricao: "Salário de roberta",
+      valor: 1500,
+      data: new Date('2024-01-02')
+    });
+
+    await request(server).post("/api/v1/receitas")
+    .send({
+      descricao: "Salário de carlos",
+      valor: 1500,
+      data: new Date('2024-01-02')
+    });
+
+    const response = await request(server).get('/api/v1/receitas/2024/01')
+    response.body.forEach((revenue: {data:string} )=>{
+      const revenueData = new Date(revenue.data);
+      const month = revenueData.getMonth() +1;
+      const year = revenueData.getFullYear()
+      expect(year).toBe(2024);
+      expect(month).toBe(1);
+    })
+  });
+
+  it('Should be array empty of revenue for month', async()=>{
+
+    const response = await request(server).get('/api/v1/receitas/2002/01')
+    expect(response.status).toEqual(200)
+    expect(response.body).toEqual([])
+  });
+})
 
 describe('GET /receitas/id findOne revenue controller', ()=>{
   it('Should be return revenue with details' ,async ()=>{
@@ -208,7 +268,7 @@ describe('GET /receitas/id findOne revenue controller', ()=>{
   });
 
   it('Should be return message if revenue not exist', async()=>{
-    const response = await request(server).get('/api/v1/receitas/6');
+    const response = await request(server).get('/api/v1/receitas/10000');
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ mensagem: 'Receita não encontrada.'});

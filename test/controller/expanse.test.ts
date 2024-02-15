@@ -28,6 +28,50 @@ describe('POST /despesas create expanse controller', ()=>{
     expect(reponse.body).toHaveProperty("id");
   });
 
+  it('Category in expenses should only receive Alimentação Saúde, Moradia, Transporte, Educação, Lazer, Imprevistos, Outras ', async()=>{
+    const newExpanse = {
+      descricao: "arroz",
+      valor: 1500,
+      data: new Date('2024-02-14'),
+      categoria: 'Qualquer categoria'
+    };
+
+    const reponse = await request(server).post("/api/v1/despesas")
+    .send(newExpanse);
+    expect(reponse.status).toBe(400);
+    expect(reponse.body).toEqual({ mensagem: 'Categoria inválida. Por favor, escolha uma destas opções: alimentacao,saude,moradia,transporte,educacao,lazer,imprevistos,outras'});
+    await request(server).delete(`/api/v1/despesas/${reponse.body.id}`);
+  });
+
+  it('Category in expense Category in expenses should only receive alimentacao saude, moradia, transporte, educacao, lazer, imprevistos, outras', async()=>{
+    const newExpanse = {
+      descricao: "arroz",
+      valor: 1500,
+      data: new Date('2024-02-14'),
+      categoria: 'alimentacao'
+    };
+
+    const reponse = await request(server).post("/api/v1/despesas")
+    .send(newExpanse);
+    expect(reponse.status).toBe(201);
+    expect(reponse.body.categoria).toBe('alimentacao')
+    await request(server).delete(`/api/v1/despesas/${reponse.body.id}`);
+  })
+
+  it('if category in expense is empty category receveid Outras', async()=>{
+    const newExpanse = {
+      descricao: "Comida show",
+      valor: 1500,
+      data: new Date('2024-02-14'),
+    };
+
+    const reponse = await request(server).post("/api/v1/despesas")
+    .send(newExpanse);
+    expect(reponse.status).toBe(201);
+    expect(reponse.body.categoria).toBe('outras')
+    await request(server).delete(`/api/v1/despesas/${reponse.body.id}`);
+  })
+
   it('Should be not create new expense if body is not passed.', async()=>{
     const newExpanse = {
     };
@@ -246,6 +290,65 @@ describe('GET /despesas findAll expense controller ', ()=>{
     });
   })
 
+  it('Should be return expense if descrition match in query params', async()=>{
+    await request(server).post("/api/v1/despesas")
+    .send({
+      descricao: "Salário Ygor",
+      valor: 1500,
+      data: new Date('2024-02-14')
+    });
+
+    await request(server).post("/api/v1/despesas")
+    .send({
+      descricao: "Salário Larissa",
+      valor: 1500,
+      data: new Date('2024-02-14')
+    });
+
+    const response = await request(server).get("/api/v1/despesas?descricao=Salário");
+    expect(response.status).toBe(200);
+    
+    response.body.forEach((expanse: { descricao: string; })=>{
+      expect(expanse.descricao).toMatch(/salário/i)
+    })
+  })
+
+ 
+
+});
+
+describe('GET /despesas/ano/mes', ()=>{
+  it('Should be list of expense for month', async()=>{
+    await request(server).post("/api/v1/despesas")
+    .send({
+      descricao: "compra de itens",
+      valor: 1500,
+      data: new Date('2024-01-02')
+    });
+
+    await request(server).post("/api/v1/despesas")
+    .send({
+      descricao: "compra de produtos",
+      valor: 1500,
+      data: new Date('2024-01-02')
+    });
+
+    const response = await request(server).get('/api/v1/despesas/2024/01')
+    response.body.forEach((expense: {data:string} )=>{
+      const expenseData = new Date(expense.data);
+      const month = expenseData.getMonth() +1;
+      const year = expenseData.getFullYear()
+      expect(year).toBe(2024);
+      expect(month).toBe(1);
+    })
+  });
+
+  it('Should be array empty of expense for month', async()=>{
+
+    const response = await request(server).get('/api/v1/despesas/2002/01')
+    expect(response.status).toEqual(200)
+    expect(response.body).toEqual([])
+  });
 });
 
 describe('GET /despesas/id findOne revenue controller', ()=>{
@@ -353,9 +456,9 @@ describe('PUT /despesas/id update expanse controller', ()=>{
     expect(reponse.status).toBe(200);
     expect(reponse.body).toEqual({ mensagem: 'Despesa não encontrada.' });
   });
-})
+});
 
-describe('DELETE /receitas/id delete revenue controller', ()=>{
+describe('DELETE /despesas/id delete revenue controller', ()=>{
   it('Should be delete expanse', async()=>{
     const responsePost = await request(server).post("/api/v1/despesas")
     .send({
@@ -380,7 +483,7 @@ describe('DELETE /receitas/id delete revenue controller', ()=>{
     expect(response.body).toEqual({ mensagem: 'Despesa não encontrada.'});
   });
 
-})
+});
 
 
 //fechando o servidor depois de cada teste
