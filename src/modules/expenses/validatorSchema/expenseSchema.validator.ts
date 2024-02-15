@@ -10,7 +10,7 @@ export class ExpenseValidatorSchema {
       descricao: string().trim().lowercase().required('O campo descricao é obrigatório.'),
       valor: number().positive('O campo valor só recebe numeros positivos').required('O campo valor é obrigátorio'),
       data: date().typeError('Formato de data inválido').required('O campo data é obrigatorio'),
-      categoria: string().trim().oneOf(Object.values(Category), `Categoria inválida. Por favor, escolha uma destas opções: ${ Object.values(Category)}`),
+      categoria: string().trim().oneOf(Object.values(Category), `Categoria inválida. Por favor, escolha uma destas opções: ${ Object.values(Category)}`).lowercase(),
     }).noUnknown();
 
     const result = await expenseBodyValidator.validate(body);
