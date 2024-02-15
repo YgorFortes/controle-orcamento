@@ -20,8 +20,8 @@ export class  SummaryService {
       const revenues = await this.revenueService.findRevenueByMonth(summaryDates);
 
       const expenses = await this.expenseService.findRevenueByMonth(summaryDates);
-
-      if (!revenues || !expenses) {
+      
+      if (!revenues?.length || !expenses?.length) {
         throw new CustomHttpError('Não encontrado receitas ou despesas nessse mês.', 200);
       }
 
