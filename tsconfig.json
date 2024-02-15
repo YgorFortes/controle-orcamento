@@ -15,7 +15,7 @@
     "strict": true,                                      
     "skipLibCheck": true ,           
     "noImplicitAny": true,
-    "strictFunctionTypes": true
+    "strictFunctionTypes": true,
   },
   "include": ["src/**/*"]
 }

@@ -19,5 +19,10 @@
     "import/no-extraneous-dependencies": "off",
     "no-console": "off",
     "typescript-eslint/return-await": "off"
-  }
+  },
+  "ignorePatterns": [
+    "jest.config.ts",
+    "prisma-enviroment-jest.js",
+    "revenue.test.ts", "expanse.test.ts"
+  ]
 }
