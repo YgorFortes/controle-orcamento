@@ -15,7 +15,7 @@ model Receitas {
   descricao String @db.VarChar(255)
   valor Float
   data DateTime
-  @@map("receitas")
+    @@map("receitas")
 }
 
 model Despesas {
@@ -25,4 +25,13 @@ model Despesas {
   data DateTime
   categoria String @db.VarChar(255)
   @@map("despesas")
+}
+
+model Usuario {
+  id Int @id @default(autoincrement())
+  nome String @db.VarChar(255)
+  login String @unique
+  email String @unique
+  senha String
+  @@map("usuario")
 }
