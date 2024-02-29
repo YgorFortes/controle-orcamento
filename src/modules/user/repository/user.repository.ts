@@ -6,8 +6,12 @@ export class UserRepository extends CrudRepository<Usuario> {
     throw new Error('Method not implemented.');
   }
 
-  findOne(elementId: number): Promise<Usuario | null> {
-    throw new Error('Method not implemented.');
+  public findOne(elementId: number): Promise<Usuario | null> {
+    return this.primaClient.usuario.findUnique({
+      where: {
+        id: elementId,
+      },
+    });
   }
 
   public findByLoginOrEmail(login?: string, email?: string): Promise<Usuario | null> {
@@ -21,16 +25,26 @@ export class UserRepository extends CrudRepository<Usuario> {
     });
   }
 
-  create(element: Usuario): Promise<Usuario> {
-    throw new Error('Method not implemented.');
+
+  public create(element: Usuario): Promise<Usuario> {
+    return this.primaClient.usuario.create({
+      data: {
+        ...element,
+      },
+    });
   }
 
-  update(elementId: number, element: Usuario): Promise<Usuario> {
-    throw new Error('Method not implemented.');
+  public update(elementId: number, element: Usuario): Promise<Usuario> {
+    return this.primaClient.usuario.update({
+      where: { id: elementId },
+      data: { ...element },
+    });
   }
 
-  delete(elementId: number): Promise<Usuario> {
-    throw new Error('Method not implemented.');
+  public delete(elementId: number): Promise<Usuario> {
+    return this.primaClient.usuario.delete({
+      where: { id: elementId },
+    });
   }
   
 }

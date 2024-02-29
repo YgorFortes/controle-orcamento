@@ -23,6 +23,6 @@
   "ignorePatterns": [
     "jest.config.ts",
     "prisma-enviroment-jest.js",
-    "revenue.test.ts", "expanse.test.ts", "summary.test.ts"
+    "revenue.test.ts", "expanse.test.ts", "summary.test.ts", "user.test.ts", "auth-user.test.ts"
   ]
 }
