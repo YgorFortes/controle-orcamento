@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { AbstractRouterController } from '../../utils/abstract-class/controller/abstract.router.controller';
 import { UserValidateSchema } from './validatorSchema/userSchema.validator';
 import { UserService } from './services/user.services';
-import { InterfaceUserLogin } from '../../utils/interfaces/validators/userSchema.interface';
+import { InterfaceUserLogin, InterfaceUserRegister } from '../../utils/interfaces/validators/userSchema.interface';
+import { Usuario } from '@prisma/client';
 
 
 export class UserController extends AbstractRouterController {
@@ -18,9 +19,10 @@ export class UserController extends AbstractRouterController {
 
   setupRouter(): void {
     this.login();
+    this.create();
   }
 
-  public login(): void {
+  private login(): void {
     this.router.post('/login', async (req: Request, res: Response, next: NextFunction)=>{
       try {
         const loginBValidated = await this.userSchemaValidator.login(req.body) as InterfaceUserLogin ; 
@@ -32,5 +34,22 @@ export class UserController extends AbstractRouterController {
       }
     });
   }
+
+  private create() : void {
+    this.router.post('/cadastrar', async (req: Request, res: Response, next: NextFunction)=>{
+      try {
+        const registerValidated = await this.userSchemaValidator.register(req.body) as InterfaceUserRegister; 
+
+        const result = await this.userService.create({ ...registerValidated } as Usuario);
+
+        return res.status(201).send({ ...result });
+      } catch (error) {
+        next(error);
+      }
+    });
+  }
+
+  
+
   
 }
