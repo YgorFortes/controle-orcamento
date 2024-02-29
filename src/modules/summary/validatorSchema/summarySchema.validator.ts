@@ -6,7 +6,7 @@ export class SummaryValidatorSchema {
     @param query Query filters provided in the query.
     @returns An object that merges the validation results of the parameters and query.
   */
-  public async validateSumary(params: object, query: object):  Promise<object> {
+  public async validateSumary(params: object):  Promise<object> {
     const revenueParamsSchema  = object({
       ano: number().typeError('O campo ano só recebe números.').integer('O campo ano só recebe números inteiros.')
         .positive('O campo ano só recebe números positivos').min(1900, 'O campo ano deve ser maior ou igual a 1900.')
@@ -18,15 +18,9 @@ export class SummaryValidatorSchema {
         .required('O campo mês no params é obrigátorio'),
     }).noUnknown();
   
-    const revenueQuerySchema  = object({
-      page: number().typeError('O campo page só recebe números.').integer('O campo page só recebe números inteiros.').positive('O campo page só recebe números positivos'),
+
   
-      limit: number().typeError('O campo limit só recebe números.').integer('O campo limit só recebe números inteiros.').positive('O campo limit só recebe números positivos'),
-    }).noUnknown();
-  
-    const resultParams = await revenueParamsSchema .validate(params);
-    const resultQuery = await revenueQuerySchema .validate(query);
-  
-    return { ...resultParams, ...resultQuery };
+    return  revenueParamsSchema .validateSync(params);
+
   }
 }

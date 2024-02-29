@@ -22,7 +22,7 @@ export class SummaryController extends AbstractRouterController {
   summary(): void {
     this.router.get('/:ano/:mes', async (req: Request, res: Response, next: NextFunction )=>{
       try {
-        const summaryValidated = await this.summaryValidatorSchema.validateSumary(req.params, req.query) as InterfaceSummarySearchOptions;
+        const summaryValidated = await this.summaryValidatorSchema.validateSumary(req.params) as InterfaceSummarySearchOptions;
 
         const summary = await this.summaryService.sumary(summaryValidated);
         return res.status(200).send(summary);
