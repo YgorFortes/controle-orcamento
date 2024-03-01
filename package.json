@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "engines": {
-    "node": "v20.1.0"
-  },
   "scripts": {
     "test": "jest",
     "build": "npx tsc",
