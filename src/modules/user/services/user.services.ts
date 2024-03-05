@@ -93,7 +93,6 @@ export class UserService {
       
       return { mensagem: 'Usuário cadastrado com sucesso', token };
     } catch (error) {
-      console.log(error);
       CustomHttpError.checkAndThrowError(error);
     }
   }

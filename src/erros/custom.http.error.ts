@@ -11,6 +11,7 @@ export class CustomHttpError extends Error {
 
   static checkAndThrowError(error: unknown): void {
     if (error instanceof CustomHttpError) {
+      console.log(error);
       throw error;
     }
 
