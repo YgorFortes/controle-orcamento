@@ -69,7 +69,6 @@ export class UserService {
       const token = jsonwebtoken.sign(payLoad, secret, { expiresIn: '1w' } );
       return token;
     } catch (error) {
-      console.log(error);
       CustomHttpError.checkAndThrowError(error);
     }
   }
@@ -94,6 +93,7 @@ export class UserService {
       
       return { mensagem: 'Usuário cadastrado com sucesso', token };
     } catch (error) {
+      console.log(error);
       CustomHttpError.checkAndThrowError(error);
     }
   }
