@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "prisma generate && npx tsc",
+    "build": "npx prisma migrate deploy && npx tsc",
     "start": " node ./dist/server.js",
     "start:and:dist": " tsc-watch --onSuccess  \"node dist/server.js\"",
     "dev": "ts-node-dev --respawn  --ignore-watch node_modules --no-notify src/server.ts",
