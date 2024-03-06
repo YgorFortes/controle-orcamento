@@ -21,7 +21,7 @@ export const swaggerDocs : OpenAPIV3_1.Document = {
 
   servers: [
     {
-      url: 'https://api-controle-orcamento.cyclic.app',
+      url: 'https://api-controle-orcamento.cyclic.app/api/v1',
     },
   ],
 
