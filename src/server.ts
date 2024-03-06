@@ -22,7 +22,7 @@ class ServerApi  {
   public createServe() {
     const serverPort = process.env.PORT || 3000;
     this.expressInstance.listen(serverPort, ()=>{
-      console.log(`Server is running on port http://localhost:${serverPort}/api/v1`);
+      console.log('Server is running');
     });
 
     return this.server;
